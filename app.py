@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, render_template, request, jsonify
 import tflite_runtime.interpreter as tflite
 import joblib

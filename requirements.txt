@@ -16,7 +16,7 @@ scikit-learn==1.0.2
 scipy==1.8.0
 six==1.16.0
 sklearn==0.0
-tflite-runtime @ https://github.com/iCorv/tflite-runtime/raw/master/tflite_runtime-2.4.0-py3-none-any.whl
+tflite-runtime @ https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp39-cp39-win_amd64.whl#sha256=414f4a2e2d141d812507f0055591f50d65e714e0a4501ad1c43b02108419d025
 threadpoolctl==3.1.0
 Werkzeug==2.1.1
 zipp==3.8.0
