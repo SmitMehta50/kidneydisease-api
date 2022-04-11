@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, render_template, request, jsonify
 import tflite_runtime.interpreter as tflite
 import joblib
@@ -53,6 +54,11 @@ def predict(data):
         return round(prob), 1-prob
     else:
         return round(prob), prob
+
+
+@app.route('/', methods=['GET', 'POST'])
+def hello():
+    return jsonify({'message': 'Hello'})
 
 
 @app.route('/kidney', methods=['GET', 'POST'])
