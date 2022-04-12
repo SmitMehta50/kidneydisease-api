@@ -227,9 +227,9 @@ def liver():
         print(prob)
 
         if pred == 1:
-            return jsonify({'message': 'Kidney Disease Detected', 'probability': prob})
+            return jsonify({'message': 'Liver Disease Detected', 'probability': prob})
         elif pred == 0:
-            return jsonify({'message': 'Kidney Disease Not Detected', 'probability': 1-prob})
+            return jsonify({'message': 'Liver Disease Not Detected', 'probability': 1-prob})
 
 
 if __name__ == '__main__':
