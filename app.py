@@ -57,7 +57,7 @@ def predict(data):
 
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-    return jsonify({'message': 'Hello'})
+    return jsonify({'kidney': '/kidney', 'liver': '/liver'})
 
 
 @app.route('/kidney', methods=['GET', 'POST'])
@@ -171,7 +171,7 @@ def liver():
                                "Gender": "Female",                   # 'Male' or 'Female'
                                "Total_Bilirubin": "10.1",              # float
                                "Direct_Bilirubin": "5.5",              # float
-                               "Alkaline_Phosphotas": "490",          # int
+                               "Alkaline_Phosphotase": "490",          # int
                                "Alamine_Aminotransferase": "60",       # int
                                "Aspartate_Aminotransferase": "68",     # int
                                "Total_Protiens": "6.8",                # float
