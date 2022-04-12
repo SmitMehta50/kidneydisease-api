@@ -149,6 +149,7 @@ def kidney():
                 appetite,
                 pedal_edema,
                 anemia]
+        print(data)
         pred, prob = predict(data)
         print(pred)
         print(prob)
