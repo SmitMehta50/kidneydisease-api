@@ -61,7 +61,7 @@ def hello():
 
 
 @app.route('/kidney', methods=['GET', 'POST'])
-def diabetes():
+def kidney():
     if request.method == 'GET':
         return jsonify({'message': "This gives Kidney disease prediction"},
                        {"POST-Key for uploading data": [
@@ -150,11 +150,85 @@ def diabetes():
                 pedal_edema,
                 anemia]
         pred, prob = predict(data)
+        print(pred)
+        print(prob)
 
-        if pred == 0:
+        if pred == 1:
             return jsonify({'message': 'Kidney Disease Detected', 'probability': prob})
-        elif pred == 1:
-            return jsonify({'message': 'Kidney Disease Not Detected', 'probability': prob})
+        elif pred == 0:
+            return jsonify({'message': 'Kidney Disease Not Detected', 'probability': 1-prob})
+
+
+#############################liver#############################################
+
+@app.route('/liver', methods=['GET', 'POST'])
+def liver():
+    if request.method == 'GET':
+        return jsonify({'message': "This gives Liver disease prediction"},
+                       {"POST-Key for uploading data": [
+                           {
+                               "Age": "52",                            # int
+                               "Gender": "Female",                   # 'Male' or 'Female'
+                               "Total_Bilirubin": "10.1",              # float
+                               "Direct_Bilirubin": "5.5",              # float
+                               "Alkaline_Phosphotas": "490",          # int
+                               "Alamine_Aminotransferase": "60",       # int
+                               "Aspartate_Aminotransferase": "68",     # int
+                               "Total_Protiens": "6.8",                # float
+                               "Albumin": "3.3",                       # float
+                               "Albumin_and_Globulin_Ratio": "0.74"   # float
+                           }
+                       ]})
+
+    elif request.method == 'POST':
+        model = joblib.load('model.pkl')
+        scaler = joblib.load('scaler.pkl')
+
+        def predict(data):
+            if data[1] == 'Female':
+                data[1] = 0
+            else:
+                data[1] = 1
+            data = scaler.transform([data])
+            pred = model.predict_proba(data)
+            return pred.argmax(), pred.ravel()[pred.argmax()]
+
+        request_data = request.get_json()
+        Age = request_data['Age']                            # int
+        Gender = request_data['Gender']                   # 'Male' or 'Female'
+        Total_Bilirubin = request_data['Total_Bilirubin']             # float
+        Direct_Bilirubin = request_data['Direct_Bilirubin']             # float
+        # int
+        Alkaline_Phosphotase = request_data['Alkaline_Phosphotase']
+        # int
+        Alamine_Aminotransferase = request_data['Alamine_Aminotransferase']
+        # int
+        Aspartate_Aminotransferase = request_data['Aspartate_Aminotransferase']
+        Total_Protiens = request_data['Total_Protiens']                # float
+        Albumin = request_data['Albumin']                       # float
+        Albumin_and_Globulin_Ratio = request_data['Albumin_and_Globulin_Ratio']
+
+        # data = [eval(i) for i in col]
+        data = [
+            Age,                           # int
+            Gender,                   # 'Male' or 'Female'
+            Total_Bilirubin,             # float
+            Direct_Bilirubin,             # float
+            Alkaline_Phosphotase,         # int
+            Alamine_Aminotransferase,      # int
+            Aspartate_Aminotransferase,   # int
+            Total_Protiens,             # float
+            Albumin,                     # float
+            Albumin_and_Globulin_Ratio,
+        ]
+        pred, prob = predict(data)
+        print(pred)
+        print(prob)
+
+        if pred == 1:
+            return jsonify({'message': 'Kidney Disease Detected', 'probability': prob})
+        elif pred == 0:
+            return jsonify({'message': 'Kidney Disease Not Detected', 'probability': 1-prob})
 
 
 if __name__ == '__main__':
