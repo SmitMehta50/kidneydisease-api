@@ -155,9 +155,9 @@ def kidney():
         print(prob)
 
         if pred == 1:
-            return jsonify({'message': 'Kidney Disease Detected', 'probability': prob})
+            return jsonify({'message': 'Kidney Disease Detected', 'probability': str(prob)})
         elif pred == 0:
-            return jsonify({'message': 'Kidney Disease Not Detected', 'probability': 1-prob})
+            return jsonify({'message': 'Kidney Disease Not Detected', 'probability': str(prob)})
 
 
 #############################liver#############################################
