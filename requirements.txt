@@ -26,7 +26,7 @@ scipy
 six
 sklearn
 tflite-runtime
-tflite-runtime @ https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp39-cp39-win_amd64.whl#sha256=414f4a2e2d141d812507f0055591f50d65e714e0a4501ad1c43b02108419d025
+# tflite-runtime @ https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp39-cp39-win_amd64.whl#sha256=414f4a2e2d141d812507f0055591f50d65e714e0a4501ad1c43b02108419d025
 threadpoolctl
 urllib3
 Werkzeug
