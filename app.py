@@ -3,6 +3,11 @@ import tflite_runtime.interpreter as tflite
 import joblib
 from flask_cors import CORS
 import argparse
+import pandas as pd
+import ast
+from haversine import haversine
+# pip install haversine
+import pgeocode
 
 app = Flask(__name__)
 CORS(app)
@@ -53,6 +58,37 @@ def predict(data):
         return round(prob), 1-prob
     else:
         return round(prob), prob
+
+
+# ****************hospital fuctions*****************************
+geo_code = pgeocode.Nominatim('IN')
+
+
+df = pd.read_csv('hospital_data_new.csv')
+df['coordinates'] = df['coordinates'].apply(lambda x: ast.literal_eval(x))
+
+
+def top_k_hospital_pincode(df, user_zip, k=5):
+    query = geo_code.query_postal_code(user_zip)
+    query = (query.latitude, query.longitude)
+    df['Distance(km)'] = df['coordinates']
+    df['Distance(km)'] = df['Distance(km)'].apply(
+        lambda x: haversine(query, x))
+    df = df.sort_values(by='Distance(km)')
+
+    return df.head(k).reset_index(drop=True)
+
+
+def top_k_hospital_co(df, co, k=5):
+    query = co
+    df['Distance(km)'] = df['coordinates']
+    df['Distance(km)'] = df['Distance(km)'].apply(
+        lambda x: haversine(query, x))
+    df = df.sort_values(by='Distance(km)')
+
+    return df.head(k).reset_index(drop=True)
+
+# *******************Routes**************************************
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -230,6 +266,29 @@ def liver():
             return jsonify({'message': 'Liver Disease Detected', 'probability': prob})
         elif pred == 0:
             return jsonify({'message': 'Liver Disease Not Detected', 'probability': 1-prob})
+
+
+# ********************************************Hospital Data*******************************************************
+
+@app.route('/hospitaldata', methods=['GET', 'POST'])
+def hospital_data():
+    if request.method == 'GET':
+        return jsonify({"message": "Hospital Data"})
+    elif request.method == 'POST':
+        request_data = request.get_json()
+        user_zip = request_data['pincode']
+        co_lat = request_data['lat']
+        co_lng = request_data['lng']
+        co = (co_lat, co_lng)
+        print(co)
+        try:
+            data = top_k_hospital_co(df, co, k=8)
+        except:
+            try:
+                data = top_k_hospital_pincode(df, user_zip, k=8)
+            except:
+                data = 'No Data Found'
+        return jsonify(data.to_dict(orient='index'))
 
 
 if __name__ == '__main__':
