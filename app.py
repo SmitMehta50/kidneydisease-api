@@ -71,20 +71,20 @@ df['coordinates'] = df['coordinates'].apply(lambda x: ast.literal_eval(x))
 def top_k_hospital_pincode(df, user_zip, k=5):
     query = geo_code.query_postal_code(user_zip)
     query = (query.latitude, query.longitude)
-    df['Distance(km)'] = df['coordinates']
-    df['Distance(km)'] = df['Distance(km)'].apply(
+    df['Distance'] = df['coordinates']
+    df['Distance'] = df['Distance'].apply(
         lambda x: haversine(query, x))
-    df = df.sort_values(by='Distance(km)')
+    df = df.sort_values(by='Distance')
 
     return df.head(k).reset_index(drop=True)
 
 
 def top_k_hospital_co(df, co, k=5):
     query = co
-    df['Distance(km)'] = df['coordinates']
-    df['Distance(km)'] = df['Distance(km)'].apply(
+    df['Distance'] = df['coordinates']
+    df['Distance'] = df['Distance'].apply(
         lambda x: haversine(query, x))
-    df = df.sort_values(by='Distance(km)')
+    df = df.sort_values(by='Distance')
 
     return df.head(k).reset_index(drop=True)
 
