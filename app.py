@@ -280,12 +280,12 @@ def hospital_data():
     elif request.method == 'POST':
         request_data = request.get_json()
         user_zip = request_data['pincode']
-        if request_data['lat'] == True:
+        if (request_data['lat']):
             co_lat = request_data['lat']
         else:
             co_lat = ""
 
-        if request_data['lng'] == True:
+        if (request_data['lng']):
             co_lng = request_data['lng']
         else:
             co_lng = ""
