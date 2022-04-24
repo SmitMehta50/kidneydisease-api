@@ -1,5 +1,3 @@
-from asyncio.windows_events import NULL
-from traceback import print_tb
 from flask import Flask, render_template, request, jsonify
 import tflite_runtime.interpreter as tflite
 import joblib
