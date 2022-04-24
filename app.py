@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+from traceback import print_tb
 from flask import Flask, render_template, request, jsonify
 import tflite_runtime.interpreter as tflite
 import joblib
@@ -68,18 +70,19 @@ df = pd.read_csv('hospital_data_new.csv')
 df['coordinates'] = df['coordinates'].apply(lambda x: ast.literal_eval(x))
 
 
-def top_k_hospital_pincode(df, user_zip, k=5):
+def top_k_hospital_pincode(df, user_zip, k=8):
     query = geo_code.query_postal_code(user_zip)
     query = (query.latitude, query.longitude)
     df['Distance'] = df['coordinates']
     df['Distance'] = df['Distance'].apply(
         lambda x: haversine(query, x))
     df = df.sort_values(by='Distance')
+    # print(query)
 
     return df.head(k).reset_index(drop=True)
 
 
-def top_k_hospital_co(df, co, k=5):
+def top_k_hospital_co(df, co, k=8):
     query = co
     df['Distance'] = df['coordinates']
     df['Distance'] = df['Distance'].apply(
@@ -277,10 +280,20 @@ def hospital_data():
     elif request.method == 'POST':
         request_data = request.get_json()
         user_zip = request_data['pincode']
-        co_lat = request_data['lat']
-        co_lng = request_data['lng']
+        if request_data['lat'] == True:
+            co_lat = request_data['lat']
+        else:
+            co_lat = ""
+
+        if request_data['lng'] == True:
+            co_lng = request_data['lng']
+        else:
+            co_lng = ""
+        # co_lat = request_data['lat']
+        # co_lng = request_data['lng']
         co = (co_lat, co_lng)
-        print(co)
+        # print(co)
+        # print(user_zip)
         try:
             data = top_k_hospital_co(df, co, k=8)
         except:
@@ -288,6 +301,7 @@ def hospital_data():
                 data = top_k_hospital_pincode(df, user_zip, k=8)
             except:
                 data = 'No Data Found'
+        # print(data)
         return jsonify(data.to_dict(orient='index'))
 
 
